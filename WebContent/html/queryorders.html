@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">   
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ 
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/angular.min.js"></script>
+<title>查询订单信息</title>
+<style>
+table, th , td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>
+<link href="css/home.css" rel="stylesheet" type="text/css"/>
+</head>
+<body ng-app="HelloAjax">
+<div ng-controller="HelloAjax">
+       <form>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+ <tr>
+   <td align="center">&nbsp;</td>
+ </tr>
+ <tr>
+	<td align="center"><table border="0" cellspacing="2" cellpadding="0" align="center"   >  
+      
+      <tr>
+        <td colspan="2"><div align="center">查询订单信息</div></td>
+        </tr>
+      <tr>
+        <td>开始时间：</td>
+        <td><input name="beginDate" type="text"  id="beginDate" value="2019-01-01" ng-model="beginDate"/></td>
+        </tr>
+      <tr>
+        <td>结束时间：</td>
+        <td><label>
+          <input name="endDate" type="text"  id="endDate" value="2019-09-09" ng-model="endDate" />
+        </label></td>
+        </tr>
+      
+      <tr>
+        <td width="106">&nbsp;</td>
+        <td width="314"><input type="button" name="Submit" value="查 询" ng-click="queryclick();" /></td>
+        </tr>
+   </table></td>
+  </tr>
+   <tr>
+   <td align="center"><table>
+     <tr>
+       <th width="122">流水号</th>
+       <th width="126">商品编码</th>
+       <th width="170">商品名称</th>
+       <th width="98">单价</th>
+       <th width="125">数量</th>
+       <th width="125">总价</th>
+       <th width="125">订购时间</th>
+     </tr>
+     <tr ng-repeat="subject in student.data">
+       <td>{{ subject.id }}</td>
+       <td>{{ subject.productId }}</td>
+       <td>{{ subject.productName }}</td>
+       <td>{{ subject.price }}</td>
+       <td>{{ subject.orderNum }}</td>
+       <td>{{ subject.money }}</td>
+       <td>{{ subject.orderTime }}</td>
+     </tr>
+   </table></td>
+ </tr>
+</table>
+
+ <br>
+ </form>
+ </div>
+</body>
+</html>
+<script type="text/javascript">
+var myModule = angular.module("HelloAjax",[]);
+myModule.controller("HelloAjax",["$scope","$http",function HelloAjax($scope,$http){
+     $scope.beginDate="2010-09-01";
+	 $scope.endDate="2019-12-01";
+	 
+	$scope.queryclick = function(){
+	
+   
+		$http({
+				method: "POST", 
+				url: "../resource/order/queryOrderInfos",
+				data:{'beginDate':$scope.beginDate,
+					  'endDate':$scope.endDate
+					}
+			}).
+			success(function(data, status) {
+			    
+			   $scope.student = data;
+			}).
+			error(function(data, status) {
+			  alert(data.desc);
+		  });
+	  }
+ 
+ 
+}]);
+
+</script>

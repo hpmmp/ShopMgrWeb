@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">   
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ 
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/angular.min.js"></script>
+<title>订购商品</title>
+<style>
+table, th , td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>
+<link href="css/home.css" rel="stylesheet" type="text/css"/>
+</head>
+<body ng-app="HelloAjax">
+<div ng-controller="HelloAjax">
+       <form>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+ <tr>
+   <td align="center">&nbsp;</td>
+ </tr>
+ <tr>
+	<td align="center"><table border="0" cellspacing="2" cellpadding="0" align="center"   >  
+      
+      <tr>
+        <td colspan="2"><div align="center">订购商品</div></td>
+        </tr>
+      <tr>
+        <td>商品：</td>
+        <td><label>
+          <select   ng-model="productId" ng-options="x.product for x in products" >
+            <option value="1001" selected="selected">白色男士衬衫</option>
+            <option value="1002">白色女士衬衫</option>
+            <option value="2001">黑色男士衬衫</option>
+            <option value="2002">黑色女士衬衫</option>
+          </select>
+        </label></td>
+      </tr>
+      <tr>
+        <td>单价：</td>
+        <td><label>
+          <input name="price" type="text"  id="price" value="100" ng-model="price" />
+        元</label></td>
+        </tr>
+      <tr>
+        <td>订购数量：</td>
+        <td><input name="orderNum" type="text"  id="orderNum" value="1" ng-model="orderNum" />
+          件</td>
+      </tr>
+      <tr>
+        <td>总金额：</td>
+        <td><input name="money" type="text"  id="money" value="100" ng-model="money" />
+          元</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="Submit" value="下单" ng-click="orderclick();" /></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      
+      <tr>
+        <td width="106">&nbsp;</td>
+        <td width="314">&nbsp;</td>
+        </tr>
+   </table></td>
+  </tr>
+   <tr>
+     <td align="center">&nbsp;</td>
+   </tr>
+</table>
+
+ <br>
+ </form>
+ </div>
+</body>
+</html>
+<script type="text/javascript">
+var myModule = angular.module("HelloAjax",[]);
+myModule.controller("HelloAjax",["$scope","$http",function HelloAjax($scope,$http){
+     $scope.price="100";
+	  $scope.orderNum="1";	 
+	 $scope.money="100";
+	  $scope.products = [
+	    {product : "白色男士衬衫", productname : "1001"},
+	    {product : "白色女士衬衫", productname : "1002"},
+		{product : "黑色男士衬衫", productname : "2001"},
+		{product : "黑色女士衬衫", productname : "2002"},
+	    {product : "红色女士衬衫", productname : "2003"}
+		
+		 
+	];
+	$scope.orderclick = function(){
+	
+   
+		$http({
+				method: "POST", 
+				url: "../resource/order/addOrder",
+				data:{'productId':$scope.productId.productname,
+				       'productName':$scope.productId.product,
+					   'price':$scope.price,
+					   'money':$scope.money, 
+					  'orderNum':$scope.orderNum
+					}
+			}).
+			success(function(data, status) {
+			    
+			  alert(data.desc);
+			}).
+			error(function(data, status) {
+			  alert(data.desc);
+		  });
+	  }
+ 
+ 
+}]);
+
+</script>

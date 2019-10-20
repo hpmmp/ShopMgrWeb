@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">   
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ 
+<script src="js/jquery-3.2.1.js"></script>
+<title>场景</title>
+<link href="css/home.css" rel="stylesheet" type="text/css"/>
+</head>
+<body><BR>
+
+<table width="802" border="1" align="center">
+  <tr>
+    <td width="161">场景名称</td>
+    <td width="234">演示地址</td>
+    <td width="88">说明</td>
+  </tr>
+  <tr>
+    <td>产品订购场景</td>
+    <td><a href="order.html">地址&gt;&gt;</a></td>
+    <td><p>涉及KAFKA、Mysql、ZK、HIVE的使用。</p>
+      <p>后台逻辑：</p>
+      <p>a.提交数据库 t_order表<br />
+        b.成功后发送消息队列（KAFKA)<br />
+    c.消息消费者写日志表（hive表）</p></td>
+  </tr>
+  <tr>
+    <td>查询订单信息</td>
+    <td><a href="queryorders.html">地址&gt;&gt;</a></td>
+    <td>涉及Mysql使用</td>
+  </tr>
+  <tr>
+    <td>查询日志表</td>
+    <td><a href="querylog.html">地址&gt;&gt;</a></td>
+    <td>涉及HIVE使用</td>
+  </tr>
+  <tr>
+    <td>查询订单信息</td>
+    <td><a href="queryhbase.html">地址&gt;&gt;</a></td>
+    <td>涉及HBASE使用</td>
+  </tr>
+  <tr>
+    <td>查询商品订购信息</td>
+    <td><a href="querystatistics.html">地址&gt;&gt;</a></td>
+    <td>涉及STORM使用</td>
+  </tr>
+</table>
+</body>
+</html>
+<script type="text/javascript">
+ 
+	function loginclick(){
+	//	alert( '${pageContext.request.contextPath}/chartapi.jsp?age='+document.thisForm.age.value);
+	//	var url = '${pageContext.request.contextPath}/chartapi.jsp?age='+document.thisForm.age.value;//获得 金额、x轴的数据
+	
+  var account = $('#account').val();
+                    var password = $('#password').val();
+                   
+
+                    if (account === '') {
+                        alert('请输入账号!');
+					  
+                        return;
+                    }
+                    if (password === '') {
+                        alert('请输入密码!');
+                        return;
+                    }
+			 
+                  $.ajax({
+    type: "post",
+    url:  "../api/sysUser/login",
+    contentType: "application/json",
+    data:"{ \"account\":\""+account+"\", \"password\":\""+password+"\"}",
+    dataType: "json",
+     error: function(jqXHR) {
+                            alert('服务器发生错误，请稍后重试。');
+                           
+                        },
+                        success: function(data) {
+                             
+                                location.href = 'main.html';
+                           
+                        }
+                    });
+
+
+				  
+				  
+	 }
+
+
+</script>
