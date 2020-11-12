@@ -36,12 +36,12 @@ table tr:nth-child(even) {
         </tr>
       <tr>
         <td>开始时间：</td>
-        <td><input name="beginDate" type="text"  id="beginDate" value="2019-01-01" ng-model="beginDate"/></td>
+        <td><input name="beginDate" type="text"  id="beginDate" value="2019-09-01" ng-model="beginDate"/></td>
         </tr>
       <tr>
         <td>结束时间：</td>
         <td><label>
-          <input name="endDate" type="text"  id="endDate" value="2019-09-09" ng-model="endDate" />
+          <input name="endDate" type="text"  id="endDate" value="2030-12-31" ng-model="endDate" />
         </label></td>
         </tr>
       
@@ -83,8 +83,8 @@ table tr:nth-child(even) {
 <script type="text/javascript">
 var myModule = angular.module("HelloAjax",[]);
 myModule.controller("HelloAjax",["$scope","$http",function HelloAjax($scope,$http){
-     $scope.beginDate="2010-09-01";
-	 $scope.endDate="2019-12-01";
+     $scope.beginDate="2019-09-01";
+	 $scope.endDate="2030-12-31";
 	 
 	$scope.queryclick = function(){
 	

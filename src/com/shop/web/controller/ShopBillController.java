@@ -1,15 +1,5 @@
 package com.shop.web.controller;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.shop.dao.HiveOperate;
 import com.shop.entity.Torder;
 import com.shop.message.PubResult;
 import com.shop.message.PubResultSet;
@@ -17,12 +7,22 @@ import com.shop.message.StatusCode;
 import com.shop.model.ShopOrderInfo;
 import com.shop.model.StateInfo;
 import com.shop.service.IShopOrder;
-import com.shop.service.kafka.KafkaProducerServer;
+import com.shop.web.entity.ShopOrderModel;
 import com.shop.web.message.AddOrderInfoReqMsg;
 import com.shop.web.message.DataListRespMsg;
 import com.shop.web.message.DataObjectRespMsg;
 import com.shop.web.message.OrderInfoReqMsg;
 import com.shop.web.service.DubboServiceFactory;
+import com.shop.web.utils.DateUtil;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
  
 
 @Controller
@@ -33,9 +33,9 @@ public class ShopBillController extends BaseController {
 		  
 			@ResponseBody
 			  @RequestMapping(value = "/queryOrderInfos", method = RequestMethod.POST)
-			  public DataListRespMsg<ShopOrderInfo> queryOrderInfos(@RequestBody OrderInfoReqMsg req) {
+			  public DataListRespMsg<ShopOrderModel> queryOrderInfos(@RequestBody OrderInfoReqMsg req) {
 				  logger.info("queryOrderInfos req : " + req.toString());
-				  DataListRespMsg<ShopOrderInfo> resp = new DataListRespMsg<ShopOrderInfo>();
+				  DataListRespMsg<ShopOrderModel> resp = new DataListRespMsg<>();
 					resp.setCode(StatusCode.REQUEST_ERROR.code());
 					resp.setDesc(StatusCode.REQUEST_ERROR.desc());
 					if (req.isMsgBodyBlank()) {
@@ -45,8 +45,17 @@ public class ShopBillController extends BaseController {
 					}
 
 					PubResultSet<ShopOrderInfo> obdResultSet = null;
+					List<ShopOrderModel> shopOrderModels = new ArrayList<>();
 					try {
 						obdResultSet = shopOrderService.queryOrderInfos(req.getBeginDate(), req.getEndDate());
+						//时间转换
+						List<ShopOrderInfo> shopOrderInfos = obdResultSet.getData();
+						for (ShopOrderInfo shopOrderInfo : shopOrderInfos) {
+							ShopOrderModel shopOrderModel = new ShopOrderModel();
+							BeanUtils.copyProperties(shopOrderInfo,shopOrderModel);
+							shopOrderModel.setOrderTime(DateUtil.formatDateTime(shopOrderInfo.getOrderTime()));
+							shopOrderModels.add(shopOrderModel);
+						}
 					} catch (Exception ex) {
 						logger.error(ex.getMessage(), ex);
 						resp.setCode(StatusCode.EXCEPTION.code());
@@ -56,7 +65,7 @@ public class ShopBillController extends BaseController {
 					if (null != obdResultSet) {
 						resp.setCode(obdResultSet.getCode());
 						resp.setDesc(obdResultSet.getDesc());
-						resp.setData(obdResultSet.getData());
+						resp.setData(shopOrderModels);
 					}
 
 					return resp;

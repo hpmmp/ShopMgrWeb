@@ -9,7 +9,6 @@ import com.shop.web.service.DubboServiceFactory;
 import com.shop.web.utils.MD5;
 import com.shop.web.vo.MsgCode;
 import com.shop.web.vo.Token;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +34,6 @@ public class SysUserController extends BaseController {
     public SysUserLoginResp login(@RequestBody JsonNode nodes, HttpServletRequest httpServletRequest) {
         SysUserLoginResp resp = new SysUserLoginResp();
         String password = nodes.get("password").asText();
-
         AccountModel sysUserInfo = sysUserService.getByAccount(nodes.get("account").asText(), (short) 1);
         if (sysUserInfo == null) {
             resp.code = MsgCode.Failure.value();
@@ -47,7 +45,6 @@ public class SysUserController extends BaseController {
             resp.code = MsgCode.Success.value();
             resp.desc = "登录成功";
             sysUserLogin(resp, sysUserInfo);
-
         }
         return resp;
     }
@@ -67,9 +64,9 @@ public class SysUserController extends BaseController {
         token.password = sysUserInfo.getPassword();
         token.time = new Timestamp(System.currentTimeMillis());
 
-        JSONObject jsonObj = JSONObject.fromObject(token);
-        System.out.println(jsonObj.toString());
-        //cacheService.saveUserToken(sysUserInfo.getAccount(), token.toString(), 2 * 60 * 60); //用户信息加入缓存，并设置超时时长（2小时）
+        //JSONObject jsonObj = JSONObject.fromObject(token);
+        //System.out.println(jsonObj.toString());
+        cacheService.saveUserToken(sysUserInfo.getAccount(), token.toString(), 2 * 60 * 60); //用户信息加入缓存，并设置超时时长（2小时）
         resp.code = MsgCode.Success.value();
         resp.desc = "登录成功";
         resp.name = sysUserInfo.getName();
